@@ -1,0 +1,24 @@
+<div id="devicegroup">
+    <div id="devicecontainer">
+        <div class="left">
+            <nz-tree [nzData]="nodes"  nzAsyncData (nzClick)="nzEvent($event)" (nzExpandChange)="nzEvent($event)" [nzTreeTemplate]="nzTreeTemplate"> </nz-tree>
+            <ng-template #nzTreeTemplate let-node let-origin="origin" >
+                <span class="custom-node">
+                  <span *ngIf="!node.isLeaf" (contextmenu)="contextMenu($event, menu,node)" (click)='getModel(node)'>
+                    <span class="folder-name" >{{ node.title }}</span>
+                  </span>
+                 
+                </span>
+              </ng-template>
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu>
+                  <li nz-menu-item (click)="addDropdown()">新建分组</li>
+                  <li nz-menu-item (click)="editDropdown()">修改分组</li>
+                  <li nz-menu-item (click)="delDropdown()">删除分组</li>
+
+                </ul>
+              </nz-dropdown-menu>
+        </div>
+            
+    </div>
+</div>

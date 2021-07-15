@@ -1,0 +1,28 @@
+<div id="login">
+    <div id='logincontainer'>
+        <canvas id="canvas" ></canvas>
+        <div class='form'>
+            <div class='formheader'>
+                <h2 style="color: #1E9FFF;
+                font-size: 25px;
+                font-weight: bold;">物联网平台登录</h2>
+            </div>
+            <div class='formbody'>
+                <nz-input-group [nzPrefix]="prefixTemplateUser">
+                    <input type="text" nz-input placeholder="Enter your username" />
+                  </nz-input-group>
+                  <ng-template #prefixTemplateUser><i nz-icon nzType="user"></i></ng-template>
+                  <!-- <ng-template #suffixTemplateInfo>
+                    <i nz-icon nz-tooltip nzTooltipTitle="Extra information" nzType="lock"></i>
+                  </ng-template> -->
+                  <br />
+                  <br />
+                  <nz-input-group [nzPrefix]="prefixTemplateLock">
+                    <input type="text" nz-input placeholder="Enter your password" />
+                  </nz-input-group>
+                  <ng-template #prefixTemplateLock><i nz-icon nzType="lock"></i></ng-template>
+                  <button nz-button nzType="primary" (click)='login()' style="width: 50%;margin-left: 25%;margin-top: 22px;height: 40px;" >登录</button>
+            </div>
+        </div>
+    </div>
+</div>

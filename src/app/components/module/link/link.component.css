@@ -1,0 +1,138 @@
+#device{
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+}
+#devicecontainer{
+    width: 100%;
+    height: 100%;
+}
+.right{
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+  }
+  .rightheader{
+    margin-bottom: 10px;
+  }
+  nz-tree {
+      overflow: hidden;
+      /* margin: 0 -24px; */
+      /* padding: 24px 24px; */
+    }
+  
+    .custom-node {
+      cursor: pointer;
+      line-height: 24px;
+      margin-left: 4px;
+      display: inline-block;
+    }
+  
+    .file-name,
+    .folder-name {
+      margin-left: 4px;
+    }
+  
+    .file-desc,
+    .folder-desc {
+      padding: 0 8px;
+      display: inline-block;
+      background: #87ceff;
+      color: #ffffff;
+      position: relative;
+      left: 12px;
+    }
+    .add,.del,.adddevice,.link{
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.2);
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+    .hiddentree{
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 4;
+    }
+    .addcon,.delcon,.linkcon{
+        width: 360px;
+        height: 180px;
+        background-color: white;
+        position: absolute;
+        left: calc(50% - 180px);
+        top: calc(50% - 100px);
+    }
+    .linkcon{
+      height: 360px;
+    }
+    .adddevicecon{
+      width: 404px;
+      /* height: 430px; */
+      padding-bottom: 10px;
+      background-color: white;
+      position: absolute;
+      left:calc(50% - 202px);
+      top:calc(50% - 210px)
+    }
+    .addheader{
+      padding: 10px;
+    }
+   .addbody{
+      padding: 0 10px;
+    }
+    input{
+        border: 1px solid rgba(0,0,0,0.2);
+        width: 282px;
+        height: 30px;
+    }
+    .addbody button{
+        width: 100px;
+    }
+    .addheader h2::after{
+      content: "";
+      visibility: hidden;
+      display: block;
+      clear: both;
+    }
+    .delcon{
+      height: 120px;
+    }
+    button{
+      border-radius: 4px;
+    }
+    .adddevicebody{
+      padding: 0 10px;
+    }
+    .adddevicebody input{
+      width: 242px;
+    }
+    nz-select{
+      width: 242px;
+    }
+    :host ::ng-deep .ant-table-thead > tr > th{
+      background-color:#56a2cf ;
+      color: #fff;
+    }
+    :host ::ng-deep .ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td{
+      padding: 8px;
+      text-align: center;
+    }
+    :host ::ng-deep .ant-table-tbody > tr > td{
+      padding: 8px;
+    }
+  tr:nth-child(odd){
+    background-color: white;
+  }
+  tr:nth-child(even){
+    background-color: #eaf3f5;
+  }
+  .list span:hover{
+    color: blue;
+    cursor: pointer;
+  }

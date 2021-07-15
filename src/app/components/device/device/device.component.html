@@ -1,0 +1,129 @@
+<div id="device">
+    <div id="devicecontainer">
+        <div style="position: absolute;top: -25px;">
+            <span style="color: blue;">设备列表</span>
+        </div>
+        <div class="right">
+            <div class="rightheader">
+                <input nz-input placeholder="请输入设备名称" [(ngModel)]="searchdevicename" style="margin-right: 10px;border-radius: 4px;"/>
+                <button nz-button nzType="primary" style="margin-right: 10px;" (click)='search()'>搜索</button>
+                <button nz-button nzType="primary" (click)='adddevice()'>添加设备</button>
+            </div>
+            <nz-table #basicTable [nzData]="listOfData">
+                <thead>
+                  <tr>
+                    <th>设备名称</th>
+                    <th>是否记录历史</th>
+                    <th>协议名称</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of basicTable.data">
+                    <td>{{ data.device_name }}</td>
+                    <td>{{ data.is_record==true?"是":"否" }}</td>
+                    <td>{{ data.protocol_name }}</td>
+                    <td>
+                        <button (click)='editdevice(data)' style="height: 30px;line-height: 30px;background-color: #1890ff;border: none;color: #fff;width: 60;margin-right: 10px;">编辑</button>
+                        <button (click)='removedevice(data)' style="height: 30px;line-height: 30px;background-color: #1890ff;border: none;color: #fff;width: 60;margin-right: 10px;">移动</button>
+                        <button (click)='getModule(data)' style="height: 30px;line-height: 30px;background-color: #1890ff;border: none;color: #fff;width: 60;margin-right: 10px;">模块</button>
+                        <button (click)='deldevice(data)' style="height: 30px;line-height: 30px;background-color: #ff4d4f;border: none;color: #fff;width: 60;">删除</button>
+
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+        </div>
+          <!-- 添加，编辑设备 -->
+        <div class='adddevice' *ngIf="adddeviceflag==true" (click)='cancleadddevice()'></div>
+        <div class="adddevicecon" *ngIf="adddeviceflag==true">
+            <div class='adddeviceheader'>
+                <div class='addheader'>
+                    <h2>{{deviceflag}}<span style="float: right;cursor: pointer;" (click)='cancleadddevice()'>×</span></h2>  
+                </div>
+                <div class='adddevicebody'>
+                    <div >
+                        <span>设&nbsp;&nbsp;备&nbsp;&nbsp;名&nbsp;&nbsp;称&nbsp;：</span>
+                        <input type="text" [(ngModel)]="devicename">
+                        <br>
+                        <span style="font-size: 12px;color: red;margin-left: 92px;" *ngIf="!service.reg(devicename)">*必须以中文或者应为开头且不能有空格的字符串</span>
+                        <span style="font-size: 12px;color: green;margin-left: 92px;" *ngIf="service.reg(devicename)">√正确</span>
+                    </div> 
+                    <div >
+                        <span>设&nbsp;&nbsp;备&nbsp;&nbsp;密&nbsp;&nbsp;码&nbsp;：</span>
+                        <input type="text" [(ngModel)]="devicepsd">
+                        <br>
+                        <span style="font-size: 12px;color: red;margin-left: 92px;" *ngIf="!service.regpsd(devicepsd)">*必须包括数字和字母且不小于六位的字符串</span>
+                        <span style="font-size: 12px;color: green;margin-left: 92px;" *ngIf="service.regpsd(devicepsd)">√正确</span>
+                    </div> 
+                    <div >
+                        <span>是否记录历史：</span>
+                        <nz-select [(ngModel)]="history">
+                            <nz-option nzValue="true" nzLabel="是"></nz-option>
+                            <nz-option nzValue="false" nzLabel="否"></nz-option>
+                          </nz-select>
+                          <br>
+                          <span style="font-size: 12px;color: red;margin-left: 92px;" *ngIf="history==''">*不为空</span>
+                        <span style="font-size: 12px;color: green;margin-left: 92px;" *ngIf="history!=''">√正确</span>
+                    </div> 
+                    <div >
+                        <span>协&nbsp;&nbsp;议&nbsp;&nbsp;名&nbsp;&nbsp;称&nbsp;：</span>
+                        <nz-select [(ngModel)]="protocolname">
+                            <nz-option *ngFor="let item of protocolList" [nzValue]='item.protocol_name' [nzLabel]="item.protocol_name"></nz-option>
+                            
+                          </nz-select>
+                          <br>
+                          <span style="font-size: 12px;color: red;margin-left: 92px;" *ngIf="protocolname==''">*不为空</span>
+                        <span style="font-size: 12px;color: green;margin-left: 92px;" *ngIf="protocolname!=''">√正确</span>
+                    </div> 
+                    <div style="padding: 0 62px;">
+                        <button nz-button nzType="primary" style="float: left;width: 100px;" (click)='sureadddevice()'>确定</button>
+                        <button nz-button nzType="danger" style="float: right;width: 100px;" (click)='cancleadddevice()'>取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- 删除分组，删除设备 -->
+         <div class="del" *ngIf="delflag==true" (click)='hiddendel()'></div>
+         <div class="delcon" *ngIf="delflag==true">
+             <div class="addheader">
+                 <h2>是否确认删除<span style="float: right;cursor:pointer;" (click)='hiddendel()'>×</span></h2>  
+             </div>
+             <div class='addbody'>
+                 <div style="padding: 0 62px;">
+                     <button nz-button nzType="primary" style="float: left;" (click)='delsure()'>确定</button>
+                     <button nz-button nzType="danger" style="float: right;" (click)='hiddendel()'>取消</button>
+                 </div>
+                
+             </div>
+         </div>
+         <!-- 移动 -->
+         <div class="removedevice" *ngIf="removeflag==true" (click)='cancleremovedevice()'></div>
+         <div class="hiddentree" *ngIf="treeflag==true" (click)='hiddentree()'></div>
+         <div class="removedevicecon" *ngIf="removeflag==true">
+            <div class='addheader'>
+                <h2>移动设备<span style="float: right;cursor: pointer;" (click)='cancleremovedevice()'>×</span></h2>  
+            </div>
+            <div class='adddevicebody'>
+               
+                <div style="margin-bottom: 15px;position: relative;" >
+                    <span>模&nbsp;&nbsp;型&nbsp;&nbsp;选&nbsp;&nbsp;择&nbsp;：</span>
+                    <input type="text" (click)='tree()' style="z-index: 5;" [(ngModel)]="treetitle">
+                    <nz-tree *ngIf="treeflag==true" style="position: absolute;z-index: 10;width: 242px;height:90px;overflow-y:scroll;left: 95px;box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%);" [nzData]="nodes"  nzAsyncData (nzClick)="nzEvent($event)" (nzExpandChange)="nzEvent($event)" [nzTreeTemplate]="nzTreeTemplate"> </nz-tree>
+        <ng-template #nzTreeTemplate let-node let-origin="origin" >
+            <span class="custom-node">
+              <span *ngIf="!node.isLeaf" (click)='getDeviceGroup(node)'>
+                <span class="folder-name" >{{ node.title }}</span>
+              </span>
+            </span>
+          </ng-template>
+                </div> 
+                
+                <div style="padding: 0 62px;">
+                    <button nz-button nzType="primary" style="float: left;width: 100px;" (click)='sureremovedevice()'>确定</button>
+                    <button nz-button nzType="danger" style="float: right;width: 100px;" (click)='cancleremovedevice()'>取消</button>
+                </div>
+            </div>
+         </div>
+    </div>
+</div>

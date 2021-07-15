@@ -1,0 +1,28 @@
+<div id="leftnav">
+    <div id="leftcontainer">
+        <div class="wrapper">
+            <button nz-button nzType="primary" (click)="toggleCollapsed()">
+              <i nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+            </button>
+            <ul nz-menu nzMode="inline" nzTheme="dark" [nzInlineCollapsed]="isCollapsed">
+              <li nz-menu-item nz-tooltip nzTooltipPlacement="right" [nzTooltipTitle]="isCollapsed ? 'Navigation One' : ''" nzSelected>
+                <i nz-icon nzType="mail"></i>
+                <span>Navigation One</span>
+              </li>
+              <li nz-submenu nzTitle="设备管理" nzIcon="appstore" nzSelected>
+                <ul>
+                  <li nz-menu-item routerLink='/devicegroup'>分组</li>
+                  <li nz-menu-item routerLink='/device'>设备</li>
+                 
+                </ul>
+              </li>
+              <li nz-submenu nzTitle="数据模型" nzIcon="setting">
+                <ul>
+                  <li nz-menu-item>模型</li>
+                  <li nz-menu-item>分组</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+    </div>
+</div>

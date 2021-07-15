@@ -1,0 +1,46 @@
+
+<div id="shadow">
+    <div id="shadowcontainer">
+        <div style="position: absolute;top: -25px;color: #666;left: 0px;" class='list'>
+            <span (click)='fnToDevice()'>设备列表</span>-
+            <span (click)='fnToModule()'>模块列表</span>-
+            <span style="color: blue;">设备影子</span>
+        </div>
+        <nz-table #basicTable [nzData]="getDevice">
+            <thead>
+              <tr>
+                <th >模块名称</th>
+                <th>属性值</th>
+                <th>时间</th>
+                <th>值</th>
+                <th>是否可读</th>
+              </tr>
+            </thead>
+            <tbody >
+              <tr *ngFor="let data of basicTable.data;let x=index" >
+                <td (click)='getLink(data,x)' style="width: 10%;">{{ data.module_name }}</td>
+                <td style="padding: 0;width: 10%;">
+                    <div *ngFor="let i of data.linklist;let x=index">
+                        <p  [ngStyle]="{'borderBottom': x==data.linklist.length-1?'none':'1px solid rgba(0,0,0,0.2)'}">{{i.attr_name}}</p>
+                    </div>
+                </td>
+                <td style="padding: 0;width: 30%;">
+                    <div *ngFor="let i of data.linklist;let x=index">
+                        <p  [ngStyle]="{'borderBottom': x==data.linklist.length-1?'none':'1px solid rgba(0,0,0,0.2)'}">{{service.formatDate(i.time)}}</p>
+                    </div>
+                </td>
+                <td style="padding: 0;width: 5%;">
+                    <div *ngFor="let i of data.linklist;let x=index">
+                        <p  [ngStyle]="{'borderBottom': x==data.linklist.length-1?'none':'1px solid rgba(0,0,0,0.2)'}">{{i.value}}</p>
+                    </div>
+                </td>
+                <td style="padding: 0;width: 5%;">
+                    <div *ngFor="let i of data.linklist;let x=index">
+                        <p [ngStyle]="{'borderBottom': x==data.linklist.length-1?'none':'1px solid rgba(0,0,0,0.2)'}">{{rw[i.attr_name]=='0'?'只读':rw[i.attr_name]=='1'?'只写':'读写'}}</p>
+                    </div>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+    </div>
+</div>

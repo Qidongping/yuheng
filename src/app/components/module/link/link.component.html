@@ -1,0 +1,158 @@
+<div id="device">
+    <div id="devicecontainer">
+      <div style="position: absolute;top: -25px;color: #666;" class='list'>
+        <span (click)='fnToDevice()'>设备列表</span>-
+        <span (click)='fnToModule()'>模块列表</span>-
+        <span style="color: blue;">联动列表</span>
+    </div>
+        <div class="right">
+            <div class="rightheader">
+                <nz-select  [(ngModel)]="searchmodulename" nzPlaceHolder="请选择属性" style="margin-right: 10px;border-radius: 4px;">
+                    <nz-option *ngFor="let item of attrList" [nzValue]="item.attr_name" [nzLabel]="item.attr_name" ></nz-option>
+                  </nz-select>
+            <button nz-button nzType="primary" style="margin-right: 10px;" (click)='search()'>搜索</button>
+            <button nz-button nzType="primary" (click)='addlink()'>添加联动</button>
+            </div>
+            <nz-table #basicTable [nzData]="listOfData">
+                <thead>
+                  <tr>
+                    <th>条件</th>
+                    <th>触发属性名</th>
+                    <!-- <th>触发设备名</th> -->
+                    <th>触发模块名</th>
+                    
+                    <th>触发的值</th>
+                    <th>被触发属性名</th>
+                   
+                    <th>被触发模块名</th>
+                    <th>被触发设备名</th>
+                    <th>被触发的值</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of basicTable.data">
+                    <td>{{ data.condition }}</td>
+                    <td>{{ data.from_attr_name}}</td>
+                    <td>{{modulename}}</td>
+                   
+                    <td>{{data.from_value}}</td>
+                    <td>{{data.to_attr_name}}</td>
+                    <td>{{data.to_module_name}}</td>
+                    <td>{{data.to_device_name}}</td>
+                    
+                    <td>{{data.to_value}}</td>
+                    <td>
+                        <button (click)='dellink(data)' style="height: 30px;line-height: 30px;background-color: #ff4d4f;border: none;color: #fff;width: 60;">删除</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+        </div>
+          <!-- 添加 -->
+        <div class='adddevice' *ngIf="addlinkflag==true" (click)='cancleaddlink()'></div>
+        <div class="hiddentree" *ngIf="treeflag==true" (click)='hiddentree()'></div>
+        <div class="adddevicecon" *ngIf="addlinkflag==true">
+            <div class='adddeviceheader'>
+                <div class='addheader'>
+                    <h2>添加联动<span style="float: right;cursor: pointer;" (click)='cancleaddlink()'>×</span></h2>  
+                </div>
+                <div class='adddevicebody'>
+                    <div >
+                        <span>选&nbsp;&nbsp;择&nbsp;&nbsp;属&nbsp;&nbsp;性&nbsp;：</span>
+                        <nz-select [(ngModel)]="attrname">
+                            <nz-option *ngFor="let item of attrList" [nzValue]="item.attr_name" [nzLabel]="item.attr_name" ></nz-option>
+                          </nz-select>
+                          <br>
+                        <span style="color: red;font-size: 12px;margin-left:92px" *ngIf="attrname==''">*不为空</span>
+                        <span style="color: green;font-size: 12px;margin-left:92px" *ngIf="attrname!=''">√正确</span>
+                    </div> 
+                    <div >
+                        <span>触&nbsp;&nbsp;发&nbsp;&nbsp;条&nbsp;&nbsp;件&nbsp;：</span>
+                        <!-- <input type="text" [(ngModel)]="condition"> -->
+                        <nz-select  [(ngModel)]="condition">
+                            <nz-option nzValue=">" nzLabel=">"></nz-option>
+                            <nz-option nzValue="<" nzLabel="<"></nz-option>
+                            <nz-option nzValue=">=" nzLabel=">=" ></nz-option>
+                       
+                            <nz-option nzValue="<=" nzLabel="<="></nz-option>
+                            <nz-option nzValue="!=" nzLabel="!=" ></nz-option>
+                          </nz-select>
+                          <br>
+                          <span style="color: red;font-size: 12px;margin-left:92px" *ngIf="condition==''">*不为空</span>
+                        <span style="color: green;font-size: 12px;margin-left:92px" *ngIf="condition!=''">√正确</span>
+                    </div>
+                    <div >
+                        <span>触&nbsp;&nbsp;&nbsp;&nbsp;发&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;值&nbsp;&nbsp;：</span>
+                        <input type="text" [(ngModel)]="value" style="width: 241px;">
+                        <br>
+                        <span style="color: red;font-size: 12px;margin-left:92px" *ngIf="value==''">*不为空</span>
+                        <span style="color: green;font-size: 12px;margin-left:92px" *ngIf="value!=''">√正确</span>
+                    </div> 
+                    <div style="position: relative;" >
+                        <span>被触发的设备：</span>
+                        <input type="text" (click)='tree()' style="z-index: 5;" [(ngModel)]="treetitle">
+                        <br>
+                        <span style="color: red;font-size: 12px;margin-left:92px" *ngIf="treetitle==''">*选择对应的设备且不为空</span>
+                        <span style="color: green;font-size: 12px;margin-left:92px" *ngIf="treetitle!=''">√正确</span>
+                        <nz-tree *ngIf="treeflag==true" style="padding:10px;position: absolute;z-index: 10;width: 242px;max-height: 200px;overflow-y: scroll;left: 97px;box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%);" [nzData]="nodes"  nzAsyncData (nzClick)="nzEvent($event)" (nzExpandChange)="nzEvent($event)" [nzTreeTemplate]="nzTreeTemplate"> </nz-tree>
+                      <ng-template #nzTreeTemplate let-node let-origin="origin" >
+                        <span class="custom-node" >
+                          <span *ngIf="!node.isLeaf" >
+                            <span class="folder-name" >{{ node.title }}</span>
+                          </span>
+                          <span *ngIf="node.isLeaf"  (click)='getModel(node)'>
+                            <span class="file-name">{{ node.title }}</span>
+                          </span>
+                        </span>
+                      </ng-template>
+                    </div> 
+                    <div >
+                        <span>被触发的模块：</span>
+                        <nz-select [(ngModel)]="triggeredmodulename" (ngModelChange)='change(triggeredmodulename)'>
+                            <nz-option *ngFor="let item of triggeredmodulelist" [nzValue]="item.module_name" [nzLabel]="item.module_name" ></nz-option>
+                          </nz-select>
+                          <br>
+                          <span style="color: red;font-size: 12px;margin-left:92px" *ngIf="triggeredmodulename==''">*不为空</span>
+                        <span style="color: green;font-size: 12px;margin-left:92px" *ngIf="triggeredmodulename!=''">√正确</span>
+                    </div> 
+                    <div >
+                        <span>被触发属性名：</span>
+                        <nz-select [(ngModel)]="triggeredattrname">
+                            <nz-option *ngFor="let item of triggeredarrtlist" [nzValue]="item.attr_name" [nzLabel]="item.attr_name" ></nz-option>
+                          </nz-select>
+                          <br>
+                          <span style="color: red;font-size: 12px;margin-left:92px" *ngIf="triggeredattrname==''">*不为空</span>
+                        <span style="color: green;font-size: 12px;margin-left:92px" *ngIf="triggeredattrname!=''">√正确</span>
+                    </div> 
+                    <div >
+                        <span>被触发属性值：</span>
+                        <input type="text" [(ngModel)]="triggeredattrvalue">
+                        <br>
+                        <span style="color: red;font-size: 12px;margin-left:92px" *ngIf="triggeredattrvalue==''">*不为空</span>
+                        <span style="color: green;font-size: 12px;margin-left:92px" *ngIf="triggeredattrvalue!=''">√正确</span>
+                    </div> 
+                    <div style="padding: 0 62px;">
+                        <button nz-button nzType="primary" style="float: left;width: 100px;" (click)='sureaddlink()'>确定</button>
+                        <button nz-button nzType="danger" style="float: right;width: 100px;" (click)='cancleaddlink()'>取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- 删除分组，删除设备 -->
+         <div class="del" *ngIf="delflag==true" (click)='hiddendel()'></div>
+         <div class="delcon" *ngIf="delflag==true">
+             <div class="addheader">
+                 <h2>是否确认删除<span style="float: right;cursor:pointer;" (click)='hiddendel()'>×</span></h2>  
+             </div>
+             <div class='addbody'>
+                 <div style="padding: 0 62px;">
+                     <button nz-button nzType="primary" style="float: left;" (click)='delsure()'>确定</button>
+                     <button nz-button nzType="danger" style="float: right;" (click)='hiddendel()'>取消</button>
+                 </div>
+                
+             </div>
+         </div>
+        
+    </div>
+</div>
